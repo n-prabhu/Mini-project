@@ -1,11 +1,15 @@
 import Header from "../components/header/header";
 import { useState } from "react";
+import axios from "axios";
+import AlertBox from "../components/alert";
 
 const Add = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [number, setNumber] = useState("");
   const [age, setAge] = useState("");
+  const [alret, setAlret] = useState(false);
+  const [message, setMessage] = useState("");
 
   const onChangeFirstName = (e) => {
     setFirstName(e.target.value);
@@ -23,10 +27,37 @@ const Add = () => {
     setAge(e.target.value);
   };
 
-  const onSubmit = (e) => {
+  const Close = () => {
+    setTimeout(() => {
+      setAlret(false);
+    }, 5000);
+  };
+
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    const newContact = {};
+    const newContact = await {
+      firstName,
+      lastName,
+      phoneNo: number,
+      age,
+    };
+
+    await axios
+      .post("http://localhost:8000/api/users/addaccount", newContact)
+      .then((response) => {
+        setMessage(response.data.message);
+        setAlret(true);
+        Close();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setFirstName("");
+    setLastName("");
+    setNumber("");
+    setAge("");
   };
 
   return (
@@ -34,6 +65,7 @@ const Add = () => {
       <Header />
       <div className="m-5">
         <h1 className="text-center">Add Contact</h1>
+        {alret ? <AlertBox message={message} /> : null}
         <form className="m-5" onSubmit={onSubmit}>
           <input
             className="form-control my-4"
