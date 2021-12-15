@@ -38,18 +38,13 @@ exports.updateAccount = async (req, res) => {
 
 exports.findOneRecord = async (req, res) => {
     try {
-        const accountDetail = await users.find({phoneNo:req.params.phoneNo});
-        {!isEmpty(accountDetail) ?  res.status(200).json({
-            message:"Ok",
-            data:accountDetail
-        }): res.status(404).json({
-            message:"Record not found"
-        })}
-
-    } catch (error) {
-        res
-        .status(500)
-        .json({ message: "Failed to retrive the data", Error: error });
+        const accountDetail = await users.findOne({phoneNo:req.params.phoneNo});
+        res.status(200).send({message:"Ok",data:accountDetail});
+    } catch (err) {
+        res.status(404).json({
+            message:"Record not found",
+            Error : err
+        });
     }
 };
 
