@@ -1,25 +1,39 @@
-const Pagination = () => {
+import "./pagination.css";
+import { range } from "lodash";
+
+const Pagination = (props) => {
+  const { totalAccount, accountPerPage, paginate, currentPage } = props;
+
+  const pages = Math.ceil(totalAccount / accountPerPage);
+  const ArrayOfPage = range(pages);
+
   return (
-    <div className="d-flex justify-content-center">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item">
-            <div class="page-link">Previous</div>
-          </li>
-          <li class="page-item">
-            <div class="page-link">1</div>
-          </li>
-          <li class="page-item">
-            <div class="page-link">2</div>
-          </li>
-          <li class="page-item">
-            <div class="page-link">3</div>
-          </li>
-          <li class="page-item">
-            <div class="page-link">Next</div>
-          </li>
-        </ul>
-      </nav>
+    <div className="d-flex justify-content-center" id="Pagination">
+      {totalAccount > 8 ? (
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            {ArrayOfPage.map((page, idx) => {
+              return (
+                <li
+                  key={page + 1}
+                  class={`page-item ${
+                    page + 1 === currentPage ? "active" : ""
+                  }`}
+                >
+                  <div
+                    class="page-link"
+                    onClick={() => {
+                      paginate(page + 1);
+                    }}
+                  >
+                    {page + 1}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      ) : null}
     </div>
   );
 };
