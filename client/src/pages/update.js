@@ -11,16 +11,31 @@ const Update = () => {
   const [searchText, setSearchText] = useState("");
   const [alert, setalert] = useState(false);
   const [message, setMessage] = useState("");
+  const [alertStatus,setAlertStatus] = useState();
 
   const SearchAccount = async () => {
-    axios
+    if(!searchText){
+      setAlertStatus("");
+      setalert(true);
+      setMessage("Please enter the phone number");
+    }else{
+      await axios
       .get(`http://localhost:8000/api/users/findone/${searchText}`)
       .then((response) => {
-        setFirstName(response.data.data[0].firstName);
-        setLastName(response.data.data[0].lastName);
-        setNumber(response.data.data[0].phoneNo);
-        setAge(response.data.data[0].age);
+        if(response.data.data === null){
+          setAlertStatus("danger");
+          setalert(true);
+          setMessage("Record Not found");
+        }else{
+          setalert(false);
+          setFirstName(response.data.data.firstName);
+          setLastName(response.data.data.lastName);
+          setNumber(response.data.data.phoneNo);
+          setAge(response.data.data.age);
+        }
+
       });
+    }
   };
 
   const onChangeFirstName = (e) => {
@@ -60,10 +75,16 @@ const Update = () => {
         updateAccount
       )
       .then((response) => {
+        setAlertStatus("success");
         setMessage(response.data.message);
         setalert(true);
         Close();
       });
+      setSearchText("");
+      setFirstName("");
+      setLastName("");
+      setNumber("");
+      setAge("");
   };
 
   return (
@@ -74,6 +95,7 @@ const Update = () => {
         <input
           className="form-control mt-4"
           type="number"
+          value={searchText}
           placeholder="Find a Account for update"
           onChange={(e) => {
             setSearchText(e.target.value);
@@ -85,7 +107,7 @@ const Update = () => {
       </div>
       {alert ? (
         <div className="mx-5">
-          <AlertBox message={message} />
+          <AlertBox message={message} status={alertStatus}/>
         </div>
       ) : null}
       <div className="m-5">

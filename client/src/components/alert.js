@@ -1,7 +1,13 @@
 const AlertBox = (prop) => {
-  const { message } = prop;
+  const { message,status } = prop;
+  let statusValue = "";
+  if(status === ""){
+    statusValue = "warning";
+  }else{
+    statusValue = status;
+  }
   return (
-    <div class="alert alert-primary mx-5" role="alert">
+    <div className={`alert alert-${statusValue} text-center`} role="alert">
       {message}
     </div>
   );

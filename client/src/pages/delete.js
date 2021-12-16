@@ -9,14 +9,22 @@ const Delete = () => {
   const [errMessage,setErrMessage ] = useState(false);
   const [open, setOpen] = useState(false);
   const [showAlert,setShowAlert] = useState(false);
-  const [searchedValue,setSearchedValue]=useState();
+  const [searchedValue,setSearchedValue]=useState("");
+  const [alertStatus,setAlertStatus] = useState();
   
   const deleteAccount = async() => {
     const searchedPhoneNumber = await document.getElementById('searchBox').value;
     setSearchedValue(searchedPhoneNumber);
-    await axios.get(`http://localhost:8000/api/users/findone/${searchedPhoneNumber}`)
+
+    if(!searchedValue){
+      setAlertStatus("");
+      setShowAlert(true);
+      setErrMessage("Please enter the phone number");
+    }else{
+      await axios.get(`http://localhost:8000/api/users/findone/${searchedPhoneNumber}`)
       .then((response)=>{
         if(response.data.data === null){
+          setAlertStatus("danger");
           setShowAlert(true);
           setErrMessage("Account not found");
         }else{
@@ -24,8 +32,7 @@ const Delete = () => {
           setOpen(true);
         }
       })
-    
-    
+    }
   };
 
   return (
@@ -43,8 +50,8 @@ const Delete = () => {
           <button className="btn btn-dark" onClick={deleteAccount}>Delete</button>    
         </div>
       </div>
-      {showAlert ? <div className="w-50 text-center m-auto"><AlertBox message={errMessage}/></div> : null}
-      <DeleteModal openModal={open} setOpenModel={setOpen} phoneNumber={searchedValue}/>
+      {showAlert ? <div className="w-50 text-center m-auto"><AlertBox message={errMessage} status={alertStatus}/></div> : null}
+      <DeleteModal openModal={open} setOpenModel={setOpen} phoneNumber={searchedValue} />
     </div>
   );
 };

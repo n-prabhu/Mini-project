@@ -65,7 +65,7 @@ const Add = () => {
       <Header />
       <div className="m-5">
         <h1 className="text-center">Add Contact</h1>
-        {alret ? <AlertBox message={message} /> : null}
+        {alret ? <AlertBox message={message} status="success"/> : null}
         <form className="m-5" onSubmit={onSubmit}>
           <input
             className="form-control my-4"

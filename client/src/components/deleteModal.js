@@ -44,7 +44,7 @@ const style = {
 
   return (
     <div>
-      {showAlert? <div className='w-50 text-center m-auto'><AlertBox message = {errMessage}/></div>:null}
+      {showAlert? <div className='w-50 text-center m-auto'><AlertBox message = {errMessage} status={"success"}/></div>:null}
       <Modal
         open={openModal}
         onClose={handleClose}
